@@ -14,6 +14,18 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/boltdb/bolt"
+  packages = ["."]
+  revision = "2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8"
+  version = "v1.3.1"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/mitchellh/go-homedir"
+  packages = ["."]
+  revision = "58046073cbffe2f25d425fe1331102f55cf719de"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = [
@@ -22,9 +34,15 @@
   ]
   revision = "f9ce57c11b242f0f1599cf25c89d8cb02c45295a"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "14742f9018cd6651ec7364dc6ee08af0baaa1031"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "be4cc266e9ca0fc43caabdfef63c23f6c184e660a8f900f975393df990bbf0b6"
+  inputs-digest = "cb4e92fee8061eab10fdc1cb70a4b91d7b13d9ba7db5fb616158dde436613a6b"
   solver-name = "gps-cdcl"
   solver-version = 1
