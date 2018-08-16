@@ -1,7 +1,9 @@
 package db
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"path/filepath"
 	"time"
 
@@ -53,4 +55,27 @@ func SaveHnScrape(hnScrape []HnPost) error {
 		return buc.Put(key, buf)
 	})
 	return err
+}
+
+// GetScrapesForDay gets all the HN posts for 1 day
+func GetScrapesForDay(t *time.Time) (result []HnPost, err error) {
+	err = db.View(func(tx *bolt.Tx) error {
+		c := tx.Bucket(dailyBuckets).Cursor()
+		min := []byte(t.Add(-24 * time.Hour).Format(time.RFC3339))
+		max := []byte(t.Format(time.RFC3339))
+		for k, v := c.Seek(min); k != nil && bytes.Compare(k, max) <= 0; k, v = c.Next() {
+			fmt.Printf("%s: %s\n", k, v)
+			var posts []HnPost
+			d := json.NewDecoder(bytes.NewBuffer(v))
+			if err := d.Decode(&posts); err != nil {
+				return err
+			}
+			result = append(result, posts...)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
