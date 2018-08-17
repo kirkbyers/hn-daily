@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/kirkbyers/hn-daily/collection"
 	"github.com/kirkbyers/hn-daily/db"
@@ -17,8 +18,21 @@ func main() {
 		os.Exit(1)
 	}
 	dbPath := filepath.Join(home, "hn-daily.db")
-
 	db.Init(dbPath)
+
+	t := time.NewTicker(15 * time.Minute)
+	defer t.Stop()
+
+	collectPosts()
+	for {
+		select {
+		case <-t.C:
+			collectPosts()
+		}
+	}
+}
+
+func collectPosts() {
 	posts, err := collection.Collect()
 	if err != nil {
 		fmt.Println("Something went wrong collecting posts:", err)
