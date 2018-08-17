@@ -9,8 +9,10 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-var dailyBuckets = []byte("daily")
-var db *bolt.DB
+var (
+	dailyBuckets = []byte("daily")
+	db           *bolt.DB
+)
 
 type dailyRecord []HnPost
 
@@ -23,8 +25,8 @@ type HnPost struct {
 }
 
 // Init Creates an instance of boltDB
-func Init(dbFilePath string) error {
-	db, err := bolt.Open(dbFilePath, 0600, &bolt.Options{Timeout: 1 * time.Second})
+func Init(dbFilePath string) (err error) {
+	db, err = bolt.Open(dbFilePath, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		return err
 	}
@@ -39,7 +41,8 @@ func SaveHnScrape(hnScrape []HnPost) error {
 	err := db.Update(func(tx *bolt.Tx) error {
 		buc := tx.Bucket(dailyBuckets)
 		// Set key for bucket the current time formated to a sortable string
-		key := []byte(time.Now().Format(time.RFC3339))
+		now := time.Now().Format(time.RFC3339)
+		key := []byte(now)
 		// Create JSON encoder
 		buf, err := json.Marshal(hnScrape)
 		if err != nil {
