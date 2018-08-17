@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"path/filepath"
 	"time"
 
 	"github.com/boltdb/bolt"
-	homedir "github.com/mitchellh/go-homedir"
 )
 
 var dailyBuckets = []byte("daily")
@@ -25,13 +23,8 @@ type HnPost struct {
 }
 
 // Init Creates an instance of boltDB
-func Init() error {
-	home, err := homedir.Dir()
-	if err != nil {
-		return err
-	}
-	dbPath := filepath.Join(home, "hn-daily.db")
-	db, err = bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
+func Init(dbFilePath string) error {
+	db, err := bolt.Open(dbFilePath, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
 		return err
 	}

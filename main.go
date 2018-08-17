@@ -3,13 +3,22 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/kirkbyers/hn-daily/collection"
 	"github.com/kirkbyers/hn-daily/db"
+	homedir "github.com/mitchellh/go-homedir"
 )
 
 func main() {
-	db.Init()
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println("Something went wrong finding homeDir:", err)
+		os.Exit(1)
+	}
+	dbPath := filepath.Join(home, "hn-daily.db")
+
+	db.Init(dbPath)
 	posts, err := collection.Collect()
 	if err != nil {
 		fmt.Println("Something went wrong collecting posts:", err)
