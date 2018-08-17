@@ -13,7 +13,7 @@ func Day(t *time.Time) (result []db.HnPost, err error) {
 	posts, err = db.GetScrapesForDay(t)
 
 	// Build a map of post with highest seen scores of the day
-	var postMap map[string]db.HnPost
+	postMap := map[string]db.HnPost{}
 	for _, v := range posts {
 		if post, ok := postMap[v.ID]; ok {
 			old := &post
@@ -28,12 +28,12 @@ func Day(t *time.Time) (result []db.HnPost, err error) {
 
 	// Build sortedPosts array
 	var sortedPosts []db.HnPost
-	for _, post := range posts {
+	for _, post := range postMap {
 		sortedPosts = append(sortedPosts, post)
 	}
 	// Sort Sorted Posts
 	sort.Slice(sortedPosts, func(i, j int) bool {
-		return sortedPosts[i].Score < sortedPosts[j].Score
+		return sortedPosts[i].Score > sortedPosts[j].Score
 	})
 
 	// Cut sorted posts to length of normal Frontpage

@@ -3,7 +3,6 @@ package db
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -60,7 +59,6 @@ func GetScrapesForDay(t *time.Time) (result []HnPost, err error) {
 		min := []byte(t.Add(-24 * time.Hour).Format(time.RFC3339))
 		max := []byte(t.Format(time.RFC3339))
 		for k, v := c.Seek(min); k != nil && bytes.Compare(k, max) <= 0; k, v = c.Next() {
-			fmt.Printf("%s: %s\n", k, v)
 			var posts []HnPost
 			d := json.NewDecoder(bytes.NewBuffer(v))
 			if err := d.Decode(&posts); err != nil {
