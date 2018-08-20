@@ -15,7 +15,7 @@ An app for scraping Hacker News and then building a front page for a given, scra
 
 ### Running
 
-Run the scraping process with `bash -c "nohup sh -c 'go run /path/to/hn-daily/main.go' &"`.
+Run the scraping process with `go run /path/to/hn-daily/main.go &`.
 
 When you're ready to create your daily digest, stop your scraping process, and run `go run digest/main.go`. This will create you JSON formated digest in the root directory. 
 
